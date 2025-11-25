@@ -2,8 +2,10 @@
   "name": "taskflow-backend",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node src/main.js",
+    "dev": "npx nodemon src/main.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
