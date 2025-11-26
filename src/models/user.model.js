@@ -41,15 +41,15 @@ const userSchema = new mongoose.Schema(
 );
 
 // Hashing pass before saving
-userSchema.pre("save", async (next) => {
-  if (!this.isModified("password")) return next();
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next;
 
   this.password = await bcrpt.hash(this.password, 10);
-  next();
+  next;
 });
 
 // Compairing Hashed password
-userSchema.methods.comparePass = async (givenPass) => {
+userSchema.methods.comparePass = async function (givenPass) {
   return await bcrpt.compare(givenPass, this.password);
 };
 
