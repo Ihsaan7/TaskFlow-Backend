@@ -3,8 +3,9 @@ import AsyncHandler from "../utils/AysncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import userModel from "../models/user.model.js";
-// import {} from "../utils/Jwt.js";
+import { genAccessToken, genRefreshToken } from "../utils/Jwt.js";
 import { uploadCloudi } from "../utils/cloudinary.js";
+import AysncHandler from "../utils/AysncHandler.js";
 
 const registerUser = AsyncHandler(async (req, res) => {
   // take data
@@ -63,3 +64,59 @@ const registerUser = AsyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(201, createdUser, "User registered Successfully"));
 });
+
+const loginUser = AysncHandler(async (req, res) => {
+  // Req,body and Check
+  // Verify form DB
+  // Check password
+  // Gen Tokens
+  // Send Res with options
+
+  // Get Data and check
+  const { email, username, password } = req.body;
+  if ((!email && !username) || !password) {
+    throw new ApiError(400, "Both fields required!");
+  }
+
+  // Check user in DB
+  const user = await userModel.findOne({ $or: [{ username }, { email }] });
+  if (!user) {
+    throw new ApiError(404, "No user found!");
+  }
+
+  // Check password
+  const validUser = await userModel.comparePass(password);
+  if (!validUser) {
+    throw new ApiError(401, "Invalid credetials!");
+  }
+
+  // Generate tokens
+  const accessToken = genAccessToken(user._id);
+  const refreshToken = genRefreshToken(user._id);
+  userModel.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
+
+  // Create instance
+  const loggedUser = await findById(user._id).select("-refreshToken -password");
+
+  // Options and Return Res
+  const options = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  };
+
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(
+        201,
+        { user: loggedUser, refreshToken, refreshToken },
+        "User loggedIn successfully"
+      )
+    );
+});
+
+export { registerUser, loginUser };
