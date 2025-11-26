@@ -28,8 +28,8 @@ const genRefreshToken = (userId) => {
   );
 };
 
-const verifyToken = (token) => {
-  return jwt.verify(token, process.env.JWT_SECRET);
-};
+// const verifyToken = (token) => {
+//   return jwt.verify(token, process.env.JWT_SECRET);
+// };
 
-export { genAccessToken, genRefreshToken, verifyToken };
+export { genAccessToken, genRefreshToken };
