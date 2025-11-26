@@ -1,5 +1,5 @@
 import express from "express";
-import AsyncHandler from "./utils/AysncHandler.js";
+import AsyncHandler from "./utils/AsyncHandler.js";
 import ApiError from "./utils/ApiError.js";
 
 const app = express();

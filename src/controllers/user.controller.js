@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-import AsyncHandler from "../utils/AysncHandler.js";
+import AsyncHandler from "../utils/AsyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import userModel from "../models/user.model.js";
@@ -64,7 +63,7 @@ const registerUser = AsyncHandler(async (req, res) => {
     .json(new ApiResponse(201, createdUser, "User registered Successfully"));
 });
 
-const loginUser = AysncHandler(async (req, res) => {
+const loginUser = AsyncHandler(async (req, res) => {
   // Req,body and Check
   // Verify form DB
   // Check password
