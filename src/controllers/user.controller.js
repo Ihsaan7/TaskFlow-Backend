@@ -34,8 +34,11 @@ const registerUser = AsyncHandler(async (req, res) => {
   if (!avatarFile) {
     throw new ApiError(400, "Avatar is required!");
   }
+  if (!coverImageFile) {
+    throw new ApiError(400, "Cover Image is required!");
+  }
   const avatar = await uploadCloudi(avatarFile.path || avatarFile);
-  const coverImage = await uploadCloudi(coverImageFile?.path || coverImage);
+  const coverImage = await uploadCloudi(coverImageFile.path || coverImageFile);
   if (!avatar) {
     throw new ApiError(400, "Avatar file is required!");
   }
