@@ -26,6 +26,16 @@ const userSchema = new mongoose.Schema(
       required: [true, "Password is Required!"],
       minlength: 6,
     },
+    avatar: {
+      type: String,
+      required: [true, "Avatar is Required!"],
+    },
+    coverImage: {
+      type: String,
+    },
+    refreshToken: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
