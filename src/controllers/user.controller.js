@@ -5,7 +5,6 @@ import ApiResponse from "../utils/ApiResponse.js";
 import userModel from "../models/user.model.js";
 import { genAccessToken, genRefreshToken } from "../utils/Jwt.js";
 import { uploadCloudi } from "../utils/cloudinary.js";
-import AysncHandler from "../utils/AysncHandler.js";
 
 const registerUser = AsyncHandler(async (req, res) => {
   // take data
@@ -85,7 +84,7 @@ const loginUser = AysncHandler(async (req, res) => {
   }
 
   // Check password
-  const validUser = await userModel.comparePass(password);
+  const validUser = await user.comparePass(password);
   if (!validUser) {
     throw new ApiError(401, "Invalid credetials!");
   }
@@ -93,11 +92,13 @@ const loginUser = AysncHandler(async (req, res) => {
   // Generate tokens
   const accessToken = genAccessToken(user._id);
   const refreshToken = genRefreshToken(user._id);
-  userModel.refreshToken = refreshToken;
+  user.refreshToken = refreshToken;
   await user.save({ validateBeforeSave: false });
 
   // Create instance
-  const loggedUser = await findById(user._id).select("-refreshToken -password");
+  const loggedUser = await userModel
+    .findById(user._id)
+    .select("-refreshToken -password");
 
   // Options and Return Res
   const options = {
@@ -112,8 +113,8 @@ const loginUser = AysncHandler(async (req, res) => {
     .cookie("refreshToken", refreshToken, options)
     .json(
       new ApiResponse(
-        201,
-        { user: loggedUser, refreshToken, refreshToken },
+        200,
+        { user: loggedUser, accessToken, refreshToken },
         "User loggedIn successfully"
       )
     );
