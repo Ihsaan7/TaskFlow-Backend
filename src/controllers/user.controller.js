@@ -5,6 +5,7 @@ import userModel from "../models/user.model.js";
 import { genAccessToken, genRefreshToken } from "../utils/Jwt.js";
 import { uploadCloudi } from "../utils/cloudinary.js";
 
+// USER REGISTER
 const registerUser = AsyncHandler(async (req, res) => {
   // take data
   // validate data
@@ -66,6 +67,7 @@ const registerUser = AsyncHandler(async (req, res) => {
     .json(new ApiResponse(201, createdUser, "User registered Successfully"));
 });
 
+// USER LOGIN
 const loginUser = AsyncHandler(async (req, res) => {
   // Req,body and Check
   // Verify form DB
@@ -74,13 +76,15 @@ const loginUser = AsyncHandler(async (req, res) => {
   // Send Res with options
 
   // Get Data and check
-  const { email, username, password } = req.body;
-  if ((!email && !username) || !password) {
+  const { identifier, password } = req.body;
+  if (!identifier || !password) {
     throw new ApiError(400, "Both fields required!");
   }
 
   // Check user in DB
-  const user = await userModel.findOne({ $or: [{ username }, { email }] });
+  const user = await userModel.findOne({
+    $or: [{ username: identifier }, { email: identifier }],
+  });
   if (!user) {
     throw new ApiError(404, "No user found!");
   }
