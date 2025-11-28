@@ -22,4 +22,9 @@ router.route("/signup").post(
 // Login
 router.route("/login").post(loginUser);
 
+// Me ( zustand )
+router.get("/me", verifyToken, async (req, res) => {
+  res.json({ user: req.user });
+});
+
 export default router;
