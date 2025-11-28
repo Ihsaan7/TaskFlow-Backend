@@ -2,6 +2,7 @@ import express from "express";
 import AsyncHandler from "./utils/AsyncHandler.js";
 import ApiError from "./utils/ApiError.js";
 import userRouter from "./routes/user.route.js";
+import boardRouter from "./routes/board.router.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -14,6 +15,9 @@ app.use(cookieParser());
 
 //----------- USER ROUTES -------------------
 app.use("/api/v1/users", userRouter);
+
+//----------- BOARD ROUTES -------------------
+app.use("/api/v1/boards ", boardRouter);
 
 // -----------Test Route ---------------
 app.get("/api/health", (req, res) => {
