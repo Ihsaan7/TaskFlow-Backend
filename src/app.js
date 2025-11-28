@@ -17,7 +17,7 @@ app.use(cookieParser());
 app.use("/api/v1/users", userRouter);
 
 //----------- BOARD ROUTES -------------------
-app.use("/api/v1/boards ", boardRouter);
+app.use("/api/v1/boards", boardRouter);
 
 // -----------Test Route ---------------
 app.get("/api/health", (req, res) => {

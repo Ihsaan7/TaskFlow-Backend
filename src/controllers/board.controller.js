@@ -1,4 +1,4 @@
-import board from "../models/board.model.js";
+import boardModel from "../models/board.model.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import AsyncHandler from "../utils/AsyncHandler.js";
@@ -9,7 +9,7 @@ const createBoard = AsyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields required!");
   }
 
-  const board = await board.create({
+  const board = await boardModel.create({
     title,
     description,
     background: background || "#0079BF",
@@ -26,7 +26,7 @@ const getAllBoard = AsyncHandler(async (req, res) => {
   if (!user) {
     throw new ApiError(403, "Unauthorized Access or Token expired!");
   }
-  const boards = await board.find({ owner: user }).sort({ createdAt: -1 });
+  const boards = await boardModel.find({ owner: user }).sort({ createdAt: -1 });
 
   return res
     .status(200)
