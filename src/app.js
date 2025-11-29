@@ -3,6 +3,7 @@ import AsyncHandler from "./utils/AsyncHandler.js";
 import ApiError from "./utils/ApiError.js";
 import userRouter from "./routes/user.route.js";
 import boardRouter from "./routes/board.router.js";
+import listRouter from "./routes/list.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -18,6 +19,9 @@ app.use("/api/v1/users", userRouter);
 
 //----------- BOARD ROUTES -------------------
 app.use("/api/v1/boards", boardRouter);
+
+//----------- BOARD ROUTES -------------------
+app.use("/api/v1/lists", listRouter);
 
 // -----------Test Route ---------------
 app.get("/api/health", (req, res) => {
