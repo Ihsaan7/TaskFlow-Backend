@@ -33,4 +33,20 @@ const getAllBoard = AsyncHandler(async (req, res) => {
     .json(new ApiResponse(200, boards, "All Boards fetched successfully"));
 });
 
-export { createBoard, getAllBoard };
+const getBoardById = AsyncHandler(async (req, res) => {
+  const { boardID } = req.params;
+  if (!boardID) {
+    throw new ApiError(400, "Board ID required!");
+  }
+
+  const board = await boardModel.findById(boardID);
+  if (!board) {
+    throw new ApiError(404, "Invalid Board id!");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, board, "Board fetched succesfully"));
+});
+
+export { createBoard, getAllBoard, getBoardById };
