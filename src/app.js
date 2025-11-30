@@ -4,6 +4,7 @@ import ApiError from "./utils/ApiError.js";
 import userRouter from "./routes/user.route.js";
 import boardRouter from "./routes/board.router.js";
 import listRouter from "./routes/list.route.js";
+import cardRouter from "./routes/card.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -22,6 +23,9 @@ app.use("/api/v1/boards", boardRouter);
 
 //----------- BOARD ROUTES -------------------
 app.use("/api/v1/lists", listRouter);
+
+//----------- BOARD ROUTES -------------------
+app.use("/api/v1/cards", cardRouter);
 
 // -----------Test Route ---------------
 app.get("/api/health", (req, res) => {
