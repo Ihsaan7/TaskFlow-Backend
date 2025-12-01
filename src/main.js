@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import app from "./app.js";
-import connectDB from "./DataBase/db.js";
+import connectDB from "./database/db.js";
 
 dotenv.config({
   path: "./.env",
@@ -8,7 +8,7 @@ dotenv.config({
 
 connectDB();
 
-const PORT = process.env.PORT || 5000;
-app.listen(process.env.PORT, () => {
-  console.log(`Backend → http://localhost: ${PORT}`);
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Backend → http://0.0.0.0:${PORT}`);
 });
