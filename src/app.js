@@ -1,6 +1,3 @@
-app.get("/", (req, res) => {
-  res.send("TaskFlow Backend is running.");
-});
 import express from "express";
 import AsyncHandler from "./utils/AsyncHandler.js";
 import ApiError from "./utils/ApiError.js";
@@ -58,6 +55,10 @@ app.get(
     throw new ApiError(400, "This is a test error!!");
   })
 );
+
+app.get("/", (req, res) => {
+  res.send("TaskFlow Backend is running.");
+});
 
 app.use((error, req, res, next) => {
   const statusCode = error.statusCode || 500;
