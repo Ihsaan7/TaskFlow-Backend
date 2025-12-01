@@ -110,7 +110,6 @@ const loginUser = AsyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
-    sameSite: "None", // Changed from "strict" to "None" for cross-domain cookies (capital N)
   };
 
   return res
