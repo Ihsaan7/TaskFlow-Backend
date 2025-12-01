@@ -41,14 +41,15 @@ async function connectDB() {
   }
 
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    if (!process.env.MONGODB_URI) {
+      throw new Error("MONGODB_URI is not defined");
+    }
+    await mongoose.connect(process.env.MONGODB_URI);
     isConnected = true;
-    console.log("MongoDB connected");
+    console.log("MongoDB connected successfully");
   } catch (error) {
-    console.error("MongoDB connection error:", error);
+    console.error("MongoDB connection error:", error.message);
+    // Don't throw - let the app continue but log the error
   }
 }
 
