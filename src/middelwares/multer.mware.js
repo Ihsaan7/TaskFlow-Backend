@@ -1,9 +1,13 @@
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import os from "os";
 
-const uploadDir = "./public/temp";
-if (!fs.existsSync(uploadDir)) {
+// Use /tmp directory for Vercel serverless (writable)
+const uploadDir = process.env.VERCEL ? "/tmp" : "./public/temp";
+
+// Only create directory if not on Vercel and directory doesn't exist
+if (!process.env.VERCEL && !fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
@@ -17,10 +21,11 @@ const diskStorage = multer.diskStorage({
   },
 });
 
+// Use memory storage for Vercel (recommended for serverless)
 const memoryStorage = multer.memoryStorage();
 
 export const upload = multer({
-  storage: diskStorage,
+  storage: process.env.VERCEL ? memoryStorage : diskStorage,
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|pdf|doc|docx|xls|xlsx|txt|zip/;
