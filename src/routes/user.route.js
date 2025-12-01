@@ -27,4 +27,12 @@ router.get("/me", verifyToken, async (req, res) => {
   res.json({ success: true, data: req.user });
 });
 
+// Logout
+router.post("/logout", (req, res) => {
+  res
+    .clearCookie("accessToken", { path: "/" })
+    .clearCookie("refreshToken", { path: "/" })
+    .json({ success: true, message: "Logged out successfully" });
+});
+
 export default router;
