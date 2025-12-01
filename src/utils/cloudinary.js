@@ -1,7 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 
-const uploadCloudi = async (file) => {
+const uploadOnCloudinary = async (file) => {
   try {
     if (!file) return null;
 
@@ -11,16 +11,13 @@ const uploadCloudi = async (file) => {
       api_secret: process.env.CLOUDINARY_API_SECRET,
     });
 
-    // Handle both file path (local) and buffer (Vercel)
     let response;
     if (typeof file === "string") {
-      // File path - local development
       response = await cloudinary.uploader.upload(file, {
         resource_type: "auto",
       });
-      fs.unlinkSync(file); // Clean up local file
+      fs.unlinkSync(file);
     } else if (file.buffer) {
-      // Buffer from multer memory storage - Vercel
       response = await new Promise((resolve, reject) => {
         cloudinary.uploader
           .upload_stream({ resource_type: "auto" }, (error, result) => {
@@ -34,14 +31,13 @@ const uploadCloudi = async (file) => {
     }
 
     console.log(
-      "File uploading to Cloudinary Successfull. URL: ",
+      "File uploading to Cloudinary Successful. URL: ",
       response.url
     );
 
     return response;
   } catch (err) {
     console.log("Uploading on Cloudinary Error!", err);
-    // Try to clean up file if it exists
     if (typeof file === "string" && fs.existsSync(file)) {
       fs.unlinkSync(file);
     }
@@ -49,7 +45,7 @@ const uploadCloudi = async (file) => {
   }
 };
 
-const deleteCloudi = async (publicId) => {
+const deleteFromCloudinary = async (publicId) => {
   try {
     if (!publicId) return null;
 
@@ -60,13 +56,13 @@ const deleteCloudi = async (publicId) => {
     });
 
     const response = await cloudinary.uploader.destroy(publicId);
-    // remove on prod
     console.log("File deleted from Cloudinary", response);
     return response;
   } catch (err) {
-    console.log("Erorr deleting from Cloudinary: ", err);
+    console.log("Error deleting from Cloudinary: ", err);
     return null;
   }
 };
 
-export { uploadCloudi, deleteCloudi };
+export { uploadOnCloudinary, deleteFromCloudinary };
+export { uploadOnCloudinary as uploadCloudi, deleteFromCloudinary as deleteCloudi };
