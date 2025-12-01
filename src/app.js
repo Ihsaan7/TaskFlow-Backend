@@ -1,3 +1,6 @@
+app.get("/", (req, res) => {
+  res.send("TaskFlow Backend is running.");
+});
 import express from "express";
 import AsyncHandler from "./utils/AsyncHandler.js";
 import ApiError from "./utils/ApiError.js";
