@@ -1,0 +1,10 @@
+node_modules
+.env
+.env.local
+.git
+.gitignore
+README.md
+VERCEL_DEPLOYMENT.md
+public/temp
+*.log
+.DS_Store
