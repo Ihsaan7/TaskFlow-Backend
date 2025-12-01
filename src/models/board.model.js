@@ -1,5 +1,17 @@
 import mongoose from "mongoose";
 
+const labelSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  color: {
+    type: String,
+    required: true,
+    default: "#61BD4F",
+  },
+});
+
 const boardSchema = new mongoose.Schema(
   {
     title: {
@@ -9,7 +21,7 @@ const boardSchema = new mongoose.Schema(
     },
     background: {
       type: String,
-      default: "#0079BF", // Blue like trello
+      default: "#0079BF",
     },
     description: {
       type: String,
@@ -24,10 +36,24 @@ const boardSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    archivedAt: {
+      type: Date,
+    },
     members: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        role: {
+          type: String,
+          enum: ["admin", "member", "viewer"],
+          default: "member",
+        },
+        addedAt: {
+          type: Date,
+          default: Date.now,
+        },
       },
     ],
     lists: [
@@ -36,6 +62,14 @@ const boardSchema = new mongoose.Schema(
         ref: "List",
       },
     ],
+    labels: [labelSchema],
+    isTemplate: {
+      type: Boolean,
+      default: false,
+    },
+    templateName: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
