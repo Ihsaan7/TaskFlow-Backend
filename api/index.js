@@ -200,6 +200,29 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+// Debug endpoint to list all routes
+app.get("/api/routes", (req, res) => {
+  const routes = [];
+  app._router.stack.forEach((middleware) => {
+    if (middleware.route) {
+      routes.push({
+        path: middleware.route.path,
+        methods: Object.keys(middleware.route.methods),
+      });
+    } else if (middleware.name === "router") {
+      middleware.handle.stack.forEach((handler) => {
+        if (handler.route) {
+          routes.push({
+            path: handler.route.path,
+            methods: Object.keys(handler.route.methods),
+          });
+        }
+      });
+    }
+  });
+  res.json({ routes });
+});
+
 app.get("/", (req, res) => {
   res.json({
     message: "TaskFlow Backend is running on Vercel",
@@ -207,6 +230,7 @@ app.get("/", (req, res) => {
     status: "operational",
     endpoints: {
       health: "/api/health",
+      routes: "/api/routes",
       users: "/api/v1/users",
       boards: "/api/v1/boards",
       lists: "/api/v1/lists",
