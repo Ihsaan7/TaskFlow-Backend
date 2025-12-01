@@ -141,8 +141,22 @@ const commentOnCard = AsyncHandler(async (req, res) => {
 
   const user = req.user._id;
   if (!user) {
-    throw new ApiError();
+    throw new ApiError(401, "User not authenticated!");
   }
+
+  const comment = { user, text, date: new Date() };
+
+  const card = await cardModel.findByIdAndUpdate(
+    cardID,
+    {
+      $push: { comments: comment },
+    },
+    { new: true }
+  );
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, card, "Comment added successfully"));
 });
 
-export { createCard, getAllCard, moveCard, getCard, updateCard };
+export { createCard, getAllCard, moveCard, getCard, updateCard, commentOnCard };
