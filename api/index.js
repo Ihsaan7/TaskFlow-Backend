@@ -70,12 +70,17 @@ app.use(async (req, res, next) => {
 
 // Import routes dynamically with error handling
 async function loadRoutes() {
+  console.log("Starting to load routes...");
+  
   try {
     const userRouter = (await import("../src/routes/user.route.js")).default;
+    if (!userRouter) {
+      throw new Error("userRouter is undefined");
+    }
     app.use("/api/v1/users", userRouter);
     console.log("✓ User routes loaded");
   } catch (e) {
-    console.error("✗ User routes failed:", e.message);
+    console.error("✗ User routes failed:", e.message, e.stack);
   }
 
   try {
@@ -185,6 +190,7 @@ async function loadRoutes() {
 
 // Load routes
 await loadRoutes();
+console.log("All routes loaded. App is ready.");
 
 // Health check endpoints
 app.get("/api/health", (req, res) => {
@@ -203,24 +209,36 @@ app.get("/api/health", (req, res) => {
 // Debug endpoint to list all routes
 app.get("/api/routes", (req, res) => {
   const routes = [];
+  
   app._router.stack.forEach((middleware) => {
     if (middleware.route) {
+      // Direct route
       routes.push({
         path: middleware.route.path,
         methods: Object.keys(middleware.route.methods),
       });
     } else if (middleware.name === "router") {
+      // Router middleware
+      const routerPath = middleware.regexp.toString()
+        .replace("/^", "")
+        .replace("\\/?(?=\\/|$)/i", "")
+        .replace(/\\\//g, "/");
+      
       middleware.handle.stack.forEach((handler) => {
         if (handler.route) {
           routes.push({
-            path: handler.route.path,
+            path: routerPath + handler.route.path,
             methods: Object.keys(handler.route.methods),
           });
         }
       });
     }
   });
-  res.json({ routes });
+  
+  res.json({ 
+    totalRoutes: routes.length,
+    routes: routes 
+  });
 });
 
 app.get("/", (req, res) => {
