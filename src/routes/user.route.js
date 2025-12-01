@@ -24,7 +24,7 @@ router.route("/login").post(loginUser);
 
 // Me ( zustand )
 router.get("/me", verifyToken, async (req, res) => {
-  res.json({ user: req.user });
+  res.json({ success: true, data: req.user });
 });
 
 export default router;
